@@ -13,10 +13,14 @@ export default class Kerdes {
     megjelenit() {
         const LISTA = this.#adat.mondat.split("_");
 
+        const valaszokHTML = this.#adat.valasztas.map(valasz => `<li>${valasz}</li>`).join("");
+
         let html = `
             <div class="col-md-6 mb-4">
                 <div class="card p-3">
-                    <p><strong>${LISTA[0]} <input type="text" id="valasz-${this.#index}" /> ${LISTA[1]}</strong></p>
+                    <p class="valaszlehetosegek">Válaszlehetőségek: ${valaszokHTML}</p>
+                    <p class="megfeleloAlak">Gépeld be a megfelelő alakot!</p>
+                    <p class="mondat">${LISTA[0]} <input type="text" id="valasz-${this.#index}" /> ${LISTA[1]}</p>
                     <button class="btn btn-primary" id="ellenor-${this.#index}">Ellenőrzés</button>
                     <div id="visszajelzes-${this.#index}" class="mt-2"></div>
                 </div>
