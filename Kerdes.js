@@ -3,10 +3,14 @@ export default class Kerdes {
     #index;
     #szuloElem;
 
-    constructor(adat, szuloElem, index) {
+    #valaszolt = false;
+    #callback;
+
+    constructor(adat, szuloElem, index, callback) {
         this.#adat = adat;
         this.#szuloElem = szuloElem;
         this.#index = index;
+        this.#callback = callback;
         this.megjelenit();
     }
 
@@ -27,5 +31,36 @@ export default class Kerdes {
             </div>
         `;
         this.#szuloElem.insertAdjacentHTML("beforeend", html);
+
+        this.#esemenyHozzaadas();
+    }
+
+    #esemenyHozzaadas() {
+        const inputElem = document.getElementById(`valasz-${this.#index}`);
+        const gomb = document.getElementById(`ellenor-${this.#index}`);
+        const visszajelzesElem = document.getElementById(`visszajelzes-${this.#index}`);
+
+        gomb.addEventListener("click", () => {
+            if (this.#valaszolt) return;
+
+            const beirt = inputElem.value.trim().toLowerCase();
+            const helyes = this.#adat.valasztas[0].toLowerCase();
+
+            if (beirt === helyes) {
+                inputElem.classList.add("border-success");
+                visszajelzesElem.innerHTML = "✅ Helyes!";
+                visszajelzesElem.style.color = "green";
+                this.#callback(true);
+            } else {
+                inputElem.classList.add("border-danger");
+                visszajelzesElem.innerHTML = `❌ Helytelen! A helyes válasz: <strong>${this.#adat.valasztas[0]}</strong>`;
+                visszajelzesElem.style.color = "red";
+                this.#callback(false);
+            }
+
+            this.#valaszolt = true;
+            inputElem.disabled = true;
+            gomb.disabled = true;
+        });
     }
 }
